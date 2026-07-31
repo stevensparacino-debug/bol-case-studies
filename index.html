@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BOL case study pipeline — status report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --graphite:#353D50;
+  --graphite-deep:#2A3040;
+  --orange:#F85E32;
+  --cyan:#7BEDF8;
+  --white:#FFFFFF;
+  --muted:#8B8586;
+  --line:rgba(255,255,255,0.10);
+  --green:#B0F436;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--graphite-deep);
+  color:var(--white);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.5;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:56px 40px 80px;}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:14px;
+}
+h1{
+  font-size:clamp(30px,4.5vw,46px);
+  font-weight:800;letter-spacing:-0.02em;line-height:1.08;
+  max-width:720px;
+}
+h1 .accent{color:var(--orange);}
+.sub{color:var(--muted);margin-top:14px;font-size:15px;max-width:640px;}
+.statbar{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);
+  margin:44px 0 56px;
+}
+.stat{background:var(--graphite);padding:22px 24px;}
+.stat .n{font-size:38px;font-weight:800;letter-spacing:-0.02em;line-height:1;}
+.stat .l{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:10px;}
+.stat.live .n{color:var(--cyan);}
+.stat.deck .n{color:var(--orange);}
+.stat.img .n{color:var(--white);}
+.stat.copy .n{color:var(--green);}
+section{margin-bottom:52px;}
+.sec-head{
+  display:flex;align-items:baseline;gap:16px;
+  border-bottom:2px solid var(--orange);padding-bottom:10px;margin-bottom:0;
+}
+.sec-head h2{
+  font-size:13px;font-weight:300;letter-spacing:.22em;text-transform:uppercase;
+}
+.sec-head .count{
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);
+}
+.note{
+  font-size:13px;color:var(--muted);padding:12px 0 4px;
+}
+.note b{color:var(--orange);font-weight:600;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{
+  text-align:left;font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  padding:14px 12px 8px 0;border-bottom:1px solid var(--line);font-weight:400;
+}
+td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);vertical-align:top;}
+td.name{font-weight:600;}
+td.dim{color:var(--muted);font-size:13px;}
+.pill{
+  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:3px;
+  white-space:nowrap;
+}
+.pill.eod{background:var(--orange);color:var(--white);font-weight:600;}
+.pill.ready{background:rgba(123,237,248,0.14);color:var(--cyan);border:1px solid rgba(123,237,248,0.35);}
+.pill.need{border:1px solid var(--orange);color:var(--orange);}
+.pill.review{border:1px solid var(--green);color:var(--green);}
+.pill.queue{border:1px solid var(--line);color:var(--muted);}
+.pill.live{background:rgba(123,237,248,0.14);color:var(--cyan);}
+.live-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);margin-top:16px;
+}
+.live-card{background:var(--graphite);padding:14px 16px;}
+.live-card .c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:4px;}
+.live-card .t{font-size:13px;font-weight:600;line-height:1.35;}
+.live-card.flag{outline:1px solid var(--green);outline-offset:-1px;}
+.live-card.flag .badge{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--green);margin-top:6px;display:block;
+}
+footer{
+  margin-top:24px;padding-top:20px;border-top:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+@media(max-width:820px){
+  .wrap{padding:40px 22px 60px;}
+  .statbar{grid-template-columns:repeat(2,1fr);}
+  .live-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:540px){
+  .live-grid{grid-template-columns:1fr;}
+  td.dim.hide-sm,th.hide-sm{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">BOL agency — website case studies</div>
+  <h1>Case study pipeline: <span class="accent">what's live, what's next,</span> and what's blocking</h1>
+  <p class="sub">Status pulled from the BOL Case Studies board and the live site as of July 31, 2026.</p>
+
+  <div class="statbar">
+    <div class="stat live"><div class="n">21</div><div class="l">Live on site</div></div>
+    <div class="stat deck"><div class="n">2</div><div class="l">Deploying by EOD</div></div>
+    <div class="stat img"><div class="n">2</div><div class="l">Need imagery</div></div>
+    <div class="stat copy"><div class="n">2</div><div class="l">Need updated copy</div></div>
+  </div>
+
+  <!-- DEPLOYING TODAY -->
+  <section>
+    <div class="sec-head"><h2>Deploying by end of day</h2><span class="count">2 pages</span></div>
+    <p class="note"><b>LTN (ABM)</b> and <b>Cision</b> both have final hero + thumbnail imagery from Kim and approved copy. Going live today.</p>
+    <table>
+      <tr><th>Case study</th><th>Copy</th><th>Imagery</th><th class="hide-sm">Owner</th><th>Status</th></tr>
+      <tr>
+        <td class="name">LTN (ABM)</td>
+        <td class="dim">Approved</td>
+        <td class="dim">Hero + thumbnail ✓</td>
+        <td class="dim hide-sm">Steven</td>
+        <td><span class="pill eod">Deploy EOD</span></td>
+      </tr>
+      <tr>
+        <td class="name">Cision (Brand)</td>
+        <td class="dim">Approved (Eric)</td>
+        <td class="dim">Hero + thumbnail ✓</td>
+        <td class="dim hide-sm">Steven</td>
+        <td><span class="pill eod">Deploy EOD</span></td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- HAS IMAGERY -->
+  <section>
+    <div class="sec-head"><h2>Imagery complete — ready for dev</h2><span class="count">1 page</span></div>
+    <table>
+      <tr><th>Case study</th><th>Copy</th><th>Imagery</th><th class="hide-sm">Owner</th><th>Status</th></tr>
+      <tr>
+        <td class="name">LTN (Web Dev)</td>
+        <td class="dim">Approved</td>
+        <td class="dim">Hero + thumbnail ✓</td>
+        <td class="dim hide-sm">Steven</td>
+        <td><span class="pill ready">Ready for dev</span></td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- NEEDS IMAGERY -->
+  <section>
+    <div class="sec-head"><h2>Blocked — needs imagery</h2><span class="count">2 pages</span></div>
+    <table>
+      <tr><th>Case study</th><th>Copy</th><th>Missing</th><th class="hide-sm">Design owner</th><th>Status</th></tr>
+      <tr>
+        <td class="name">Bombora (GTM)</td>
+        <td class="dim">Complete</td>
+        <td class="dim">Hero + thumbnail</td>
+        <td class="dim hide-sm">Kim</td>
+        <td><span class="pill need">Need image</span></td>
+      </tr>
+      <tr>
+        <td class="name">LTN (Events)</td>
+        <td class="dim">In progress</td>
+        <td class="dim">Hero + thumbnail</td>
+        <td class="dim hide-sm">Kim</td>
+        <td><span class="pill need">Need image</span></td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- NEEDS UPDATED COPY -->
+  <section>
+    <div class="sec-head"><h2>Live pages flagged for updated copy</h2><span class="count">2 pages</span></div>
+    <p class="note">Both are currently live but entered <b>BOL Review</b> on 7/29 for refreshed copy.</p>
+    <table>
+      <tr><th>Case study</th><th>Currently live as</th><th>Status</th></tr>
+      <tr>
+        <td class="name">CareMetx</td>
+        <td class="dim">Creative — "2.8M+ patients access meds faster"</td>
+        <td><span class="pill review">Needs updated copy</span></td>
+      </tr>
+      <tr>
+        <td class="name">Akeneo</td>
+        <td class="dim">Brand awareness — "74K+ launch video views"</td>
+        <td><span class="pill review">Needs updated copy</span></td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- QUEUE -->
+  <section>
+    <div class="sec-head"><h2>In the queue — one per week</h2><span class="count">13 pages · Aug–Oct</span></div>
+    <table>
+      <tr><th>Case study</th><th>Scheduled week</th><th class="hide-sm">Priority</th></tr>
+      <tr><td class="name">PayPal (Industry — Ticketing)</td><td class="dim">Jul 27 – Jul 31</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">Sunrise (Brand Launch)</td><td class="dim">Aug 3 – Aug 7</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">Nearmap (Media)</td><td class="dim">Aug 10 – Aug 14</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">Worldly (GTM)</td><td class="dim">Aug 17 – Aug 21</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">SOLIDWORKS (Experience Design)</td><td class="dim">Aug 24 – Aug 28</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">MITER (Web Dev)</td><td class="dim">Aug 31 – Sep 4</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">Surescripts (ABM)</td><td class="dim">Sep 7 – Sep 11</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">Blackburn (Web Dev, SEO)</td><td class="dim">Sep 14 – Sep 18</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">Bombora (GEO)</td><td class="dim">Sep 21 – Sep 25</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">Forescout (GEO)</td><td class="dim">Sep 28 – Oct 2</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">PayPal (Full Funnel)</td><td class="dim">Oct 5 – Oct 9</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">3Pillar (Content Creation)</td><td class="dim">Oct 12 – Oct 16</td><td class="dim hide-sm">Medium</td></tr>
+      <tr><td class="name">Stellar Elements (Campaign)</td><td class="dim">Oct 19 – Oct 23</td><td class="dim hide-sm">Medium</td></tr>
+    </table>
+  </section>
+
+  <!-- LIVE -->
+  <section>
+    <div class="sec-head"><h2>Live on bol-agency.com/case-studies</h2><span class="count">21 pages</span></div>
+    <div class="live-grid">
+      <div class="live-card"><div class="c">ABM</div><div class="t">Blue Yonder</div></div>
+      <div class="live-card"><div class="c">ABM</div><div class="t">Client roundup: ABM done right</div></div>
+      <div class="live-card"><div class="c">Creative</div><div class="t">PayPal — 79% business volume growth</div></div>
+      <div class="live-card"><div class="c">SEO</div><div class="t">SOLIDWORKS — clicks up 339%</div></div>
+      <div class="live-card"><div class="c">ABM</div><div class="t">Global Logistics Leader — 75% of opps influenced</div></div>
+      <div class="live-card"><div class="c">Paid media</div><div class="t">Neustar — opportunities up 137%</div></div>
+      <div class="live-card"><div class="c">ABM</div><div class="t">Baker Hughes — 1,300% ROI increase</div></div>
+      <div class="live-card flag"><div class="c">Brand awareness</div><div class="t">Akeneo — 74K+ launch video views</div><span class="badge">▲ Copy refresh in review</span></div>
+      <div class="live-card flag"><div class="c">Creative</div><div class="t">CareMetx — 2.8M+ patients served faster</div><span class="badge">▲ Copy refresh in review</span></div>
+      <div class="live-card"><div class="c">Paid media</div><div class="t">AEM — record trade show attendance</div></div>
+      <div class="live-card"><div class="c">SEO &amp; content</div><div class="t">Donately — users up 77%</div></div>
+      <div class="live-card"><div class="c">ABM 1:1</div><div class="t">Honeywell Airports — shares up 6%</div></div>
+      <div class="live-card"><div class="c">ABM</div><div class="t">6sense + CRM tech optimization</div></div>
+      <div class="live-card"><div class="c">ICP</div><div class="t">Honeywell — 30x lead increase</div></div>
+      <div class="live-card"><div class="c">Demand gen</div><div class="t">Lincoln Electric — $5B in sales</div></div>
+      <div class="live-card"><div class="c">Demand gen</div><div class="t">Workday — SALs up 88%</div></div>
+      <div class="live-card"><div class="c">ABM</div><div class="t">LocknCharge — ABM through global change</div></div>
+      <div class="live-card"><div class="c">Strategy</div><div class="t">Serena — 95% SAL growth</div></div>
+      <div class="live-card"><div class="c">Paid media</div><div class="t">iZotope — marketing ROI up 155%</div></div>
+      <div class="live-card"><div class="c">Content &amp; creative</div><div class="t">Valleycrest — bespoke content ROI</div></div>
+      <div class="live-card"><div class="c">ABM</div><div class="t">Lithium — global expansion via ABM</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Source: Monday.com · BOL Case Studies board + live site audit</span>
+    <span>Prepared July 31, 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
