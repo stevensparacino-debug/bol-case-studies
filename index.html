@@ -16,7 +16,6 @@
   --muted:#8B8586;
   --line:rgba(255,255,255,0.10);
   --green:#B0F436;
-  --amber:#EEFF41;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
@@ -47,9 +46,9 @@ h1 .accent{color:var(--orange);}
 .stat .n{font-size:34px;font-weight:800;letter-spacing:-0.02em;line-height:1;}
 .stat .l{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:10px;}
 .stat.live .n{color:var(--cyan);}
-.stat.prod .n{color:var(--orange);}
-.stat.queue .n{color:var(--white);}
-.stat.review .n{color:var(--green);}
+.stat.img .n{color:var(--orange);}
+.stat.copy .n{color:var(--white);}
+.stat.queue .n{color:var(--muted);}
 section{margin-bottom:48px;}
 .sec-head{
   display:flex;align-items:baseline;gap:16px;
@@ -57,8 +56,6 @@ section{margin-bottom:48px;}
 }
 .sec-head h2{font-size:13px;font-weight:300;letter-spacing:.22em;text-transform:uppercase;}
 .sec-head .count{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
-.note{font-size:13px;color:var(--muted);padding:12px 0 4px;}
-.note b{color:var(--orange);font-weight:600;}
 table{width:100%;border-collapse:collapse;font-size:14px;}
 th{
   text-align:left;font-family:'JetBrains Mono',monospace;font-size:10px;
@@ -68,16 +65,16 @@ th{
 td{padding:11px 14px 11px 0;border-bottom:1px solid var(--line);vertical-align:middle;}
 td.name{font-weight:600;white-space:nowrap;}
 td.date{font-family:'JetBrains Mono',monospace;font-size:12px;white-space:nowrap;}
-td.date.overdue{color:var(--orange);font-weight:600;}
+td.date.soon{color:var(--orange);font-weight:600;}
 td.date.none{color:var(--muted);}
 .st{
   display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;
   letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:3px;
   white-space:nowrap;border:1px solid transparent;
 }
-/* status color logic: complete=cyan, mid=white outline, early=muted outline */
 .st.complete{background:rgba(123,237,248,0.14);color:var(--cyan);border-color:rgba(123,237,248,0.3);}
 .st.proofed{background:rgba(176,244,54,0.12);color:var(--green);border-color:rgba(176,244,54,0.3);}
+.st.written{color:var(--green);border-color:rgba(176,244,54,0.35);}
 .st.mid{color:var(--white);border-color:rgba(255,255,255,0.3);}
 .st.early{color:var(--muted);border-color:var(--line);}
 tr.section-row td{
@@ -115,10 +112,10 @@ footer{
   <p class="sub">Every current and planned case study with copy, image, and dev status. Dates are removed once a page is live.</p>
 
   <div class="statbar">
-    <div class="stat live"><div class="n">21</div><div class="l">Live on site</div></div>
-    <div class="stat prod"><div class="n">5</div><div class="l">In production</div></div>
-    <div class="stat queue"><div class="n">13</div><div class="l">Planned</div></div>
-    <div class="stat review"><div class="n">2</div><div class="l">Live — copy refresh</div></div>
+    <div class="stat live"><div class="n">23</div><div class="l">Live on site</div></div>
+    <div class="stat img"><div class="n">4</div><div class="l">Image development</div></div>
+    <div class="stat copy"><div class="n">2</div><div class="l">Copy development</div></div>
+    <div class="stat queue"><div class="n">12</div><div class="l">Planned</div></div>
   </div>
 
   <section>
@@ -133,157 +130,73 @@ footer{
         <th>Expected complete</th>
       </tr>
 
-      <tr class="section-row"><td colspan="5">In production</td></tr>
+      <tr class="section-row"><td colspan="5">Image development</td></tr>
 
       <tr>
-        <td class="name">LTN (ABM)</td>
-        <td><span class="st complete">Complete</span></td>
-        <td><span class="st complete">Complete</span></td>
-        <td><span class="st proofed">Proofed</span></td>
-        <td class="date">Aug 3</td>
-      </tr>
-      <tr>
-        <td class="name">Cision (Brand)</td>
-        <td><span class="st complete">Complete</span></td>
-        <td><span class="st complete">Complete</span></td>
-        <td><span class="st proofed">Proofed</span></td>
-        <td class="date">Aug 3</td>
-      </tr>
-      <tr>
-        <td class="name">LTN (Web Dev)</td>
-        <td><span class="st complete">Complete</span></td>
-        <td><span class="st complete">Complete</span></td>
-        <td><span class="st mid">In Development</span></td>
-        <td class="date">Aug 7</td>
+        <td class="name">Blackburn (Web Dev, SEO)</td>
+        <td><span class="st written">Written</span></td>
+        <td><span class="st early">Searching</span></td>
+        <td><span class="st early">In Development</span></td>
+        <td class="date soon">Aug 7</td>
       </tr>
       <tr>
         <td class="name">Bombora (GTM)</td>
         <td><span class="st proofed">Proofed</span></td>
         <td><span class="st early">Searching</span></td>
         <td><span class="st early">In Development</span></td>
-        <td class="date overdue">Aug 7 ▲</td>
+        <td class="date">Aug 14</td>
+      </tr>
+      <tr>
+        <td class="name">Akeneo (refresh)</td>
+        <td><span class="st complete">Complete</span></td>
+        <td><span class="st early">Searching</span></td>
+        <td><span class="st complete">Complete</span></td>
+        <td class="date">Aug 14</td>
+      </tr>
+      <tr>
+        <td class="name">CareMetx (refresh)</td>
+        <td><span class="st complete">Complete</span></td>
+        <td><span class="st early">Searching</span></td>
+        <td><span class="st complete">Complete</span></td>
+        <td class="date">Aug 21</td>
+      </tr>
+
+      <tr class="section-row"><td colspan="5">Copy development</td></tr>
+
+      <tr>
+        <td class="name">LTN (Web Dev)</td>
+        <td><span class="st mid">In Development</span></td>
+        <td><span class="st mid">In Design</span></td>
+        <td><span class="st early">In Development</span></td>
+        <td class="date">Aug 14</td>
       </tr>
       <tr>
         <td class="name">LTN (Events)</td>
         <td><span class="st mid">In Development</span></td>
         <td><span class="st early">Searching</span></td>
         <td><span class="st early">In Development</span></td>
-        <td class="date overdue">Aug 14 ▲</td>
-      </tr>
-
-      <tr class="section-row"><td colspan="5">Live — copy refresh in review</td></tr>
-
-      <tr>
-        <td class="name">CareMetx</td>
-        <td><span class="st mid">In Development</span></td>
-        <td><span class="st complete">Complete</span></td>
-        <td><span class="st complete">Complete</span></td>
-        <td class="date none">TBD</td>
-      </tr>
-      <tr>
-        <td class="name">Akeneo</td>
-        <td><span class="st mid">In Development</span></td>
-        <td><span class="st complete">Complete</span></td>
-        <td><span class="st complete">Complete</span></td>
-        <td class="date none">TBD</td>
+        <td class="date">Aug 14</td>
       </tr>
 
       <tr class="section-row"><td colspan="5">Planned — one per week</td></tr>
 
-      <tr>
-        <td class="name">PayPal (Industry — Ticketing)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date overdue">Aug 7 ▲</td>
-      </tr>
-      <tr>
-        <td class="name">Sunrise (Brand Launch)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Aug 7</td>
-      </tr>
-      <tr>
-        <td class="name">Nearmap (Media)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Aug 14</td>
-      </tr>
-      <tr>
-        <td class="name">Worldly (GTM)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Aug 21</td>
-      </tr>
-      <tr>
-        <td class="name">SOLIDWORKS (Experience Design)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Aug 28</td>
-      </tr>
-      <tr>
-        <td class="name">MITER (Web Dev)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Sep 4</td>
-      </tr>
-      <tr>
-        <td class="name">Surescripts (ABM)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Sep 11</td>
-      </tr>
-      <tr>
-        <td class="name">Blackburn (Web Dev, SEO)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Sep 18</td>
-      </tr>
-      <tr>
-        <td class="name">Bombora (GEO)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Sep 25</td>
-      </tr>
-      <tr>
-        <td class="name">Forescout (GEO)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Oct 2</td>
-      </tr>
-      <tr>
-        <td class="name">PayPal (Full Funnel)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Oct 9</td>
-      </tr>
-      <tr>
-        <td class="name">3Pillar (Content Creation)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Oct 16</td>
-      </tr>
-      <tr>
-        <td class="name">Stellar Elements (Campaign)</td>
-        <td><span class="st early">In Development</span></td>
-        <td><span class="st early">Searching</span></td>
-        <td><span class="st early">In Development</span></td>
-        <td class="date">Oct 23</td>
-      </tr>
+      <tr><td class="name">PayPal (Industry — Ticketing)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date soon">Aug 7</td></tr>
+      <tr><td class="name">Sunrise (Brand Launch)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Aug 14</td></tr>
+      <tr><td class="name">Nearmap (Media)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Aug 21</td></tr>
+      <tr><td class="name">Worldly (GTM)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Aug 28</td></tr>
+      <tr><td class="name">SOLIDWORKS (Experience Design)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Sep 4</td></tr>
+      <tr><td class="name">MITER (Web Dev)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Sep 11</td></tr>
+      <tr><td class="name">Surescripts (ABM)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Sep 18</td></tr>
+      <tr><td class="name">Bombora (GEO)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Oct 2</td></tr>
+      <tr><td class="name">Forescout (GEO)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Oct 9</td></tr>
+      <tr><td class="name">PayPal (Full Funnel)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Oct 16</td></tr>
+      <tr><td class="name">3Pillar (Content Creation)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Oct 23</td></tr>
+      <tr><td class="name">Stellar Elements (Campaign)</td><td><span class="st early">In Development</span></td><td><span class="st early">Searching</span></td><td><span class="st early">In Development</span></td><td class="date">Oct 30</td></tr>
 
       <tr class="section-row"><td colspan="5">Live on site — no dates</td></tr>
 
+      <tr><td class="name">LTN (ABM) — new</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
+      <tr><td class="name">Cision (Brand) — new</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">Blue Yonder (ABM)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">Client Roundup (ABM)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">PayPal (Creative)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
@@ -291,6 +204,8 @@ footer{
       <tr><td class="name">Global Logistics Leader (ABM)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">Neustar (Paid Media)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">Baker Hughes (ABM)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
+      <tr><td class="name">Akeneo (Brand Awareness)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
+      <tr><td class="name">CareMetx (Creative)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">AEM (Paid Media)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">Donately (SEO &amp; Content)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">Honeywell Airports (ABM 1:1)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
@@ -309,12 +224,12 @@ footer{
       <div><b>Copy statuses</b>In Development → Written → Proofed → Complete</div>
       <div><b>Image statuses</b>Searching → In Design → Complete</div>
       <div><b>Dev statuses</b>In Development → Developed → Proofed → Complete</div>
-      <div><b>▲</b>Past original board date — new date assigned</div>
+      <div><b>Refresh</b>Live page getting updated assets — dev stays Complete</div>
     </div>
   </section>
 
   <footer>
-    <span>Source: Monday.com · BOL Case Studies board + live site audit</span>
+    <span>Source: Monday.com · 26-BOL Case Studies board + live site audit</span>
     <span>Updated August 3, 2026</span>
   </footer>
 
