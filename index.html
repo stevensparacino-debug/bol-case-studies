@@ -97,6 +97,27 @@ footer{
   font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
 }
+
+.toolbar{
+  position:fixed;top:16px;right:16px;z-index:50;display:flex;gap:8px;
+}
+.toolbar button{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;padding:9px 14px;border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:var(--graphite);color:var(--white);
+  transition:all .15s;
+}
+.toolbar button:hover{border-color:var(--cyan);color:var(--cyan);}
+.toolbar button.active{background:var(--orange);border-color:var(--orange);color:var(--white);}
+body.editing .st{cursor:pointer;box-shadow:0 0 0 1px rgba(123,237,248,0.25);}
+body.editing td.date{cursor:text;outline:1px dashed rgba(123,237,248,0.3);outline-offset:-2px;}
+.edit-hint{display:none;position:fixed;bottom:16px;right:16px;z-index:50;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--cyan);background:var(--graphite);
+  border:1px solid var(--line);padding:8px 12px;border-radius:4px;}
+body.editing .edit-hint{display:block;}
+@media print{.toolbar,.edit-hint{display:none!important;}}
+
 @media(max-width:900px){
   .wrap{padding:40px 20px 60px;}
   .statbar{grid-template-columns:repeat(2,1fr);}
@@ -106,6 +127,11 @@ footer{
 </style>
 </head>
 <body>
+<div class="toolbar">
+  <button id="edit-toggle" type="button">Edit mode</button>
+  <button id="download-html" type="button">Download updated HTML</button>
+</div>
+<div class="edit-hint">Click a status to cycle &middot; click a date to type</div>
 <div class="wrap">
 
   <div class="eyebrow">BOL agency — website case studies</div>
@@ -113,10 +139,10 @@ footer{
   <p class="sub">Status reflects the live site and the 26-BOL Case Studies board. All work completes in August — treated as a client project with added resources.</p>
 
   <div class="statbar">
-    <div class="stat pri"><div class="n">20</div><div class="l">Live — missing work examples</div></div>
+    <div class="stat pri"><div class="n">19</div><div class="l">Live — missing work examples</div></div>
     <div class="stat prod"><div class="n">4</div><div class="l">In production</div></div>
     <div class="stat queue"><div class="n">12</div><div class="l">Planned</div></div>
-    <div class="stat live"><div class="n">4</div><div class="l">Live &amp; complete</div></div>
+    <div class="stat live"><div class="n">5</div><div class="l">Live &amp; complete</div></div>
   </div>
 
   <section>
@@ -138,7 +164,6 @@ footer{
       <tr><td class="name">PayPal (Creative)</td><td><span class="st complete">Complete</span></td><td><span class="st search">Searching</span></td><td><span class="st complete">Complete</span></td><td class="date soon">Aug 7</td></tr>
       <tr><td class="name">Honeywell Airports (ABM 1:1)</td><td><span class="st complete">Complete</span></td><td><span class="st search">Searching</span></td><td><span class="st complete">Complete</span></td><td class="date soon">Aug 7</td></tr>
       <tr><td class="name">Neustar (Paid Media)</td><td><span class="st complete">Complete</span></td><td><span class="st search">Searching</span></td><td><span class="st complete">Complete</span></td><td class="date soon">Aug 14</td></tr>
-      <tr><td class="name">Baker Hughes (ABM)</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st proofed">Proofed</span></td><td class="date soon">Aug 14</td></tr>
       <tr><td class="name">Lytx (Creative)</td><td><span class="st early">In Development</span></td><td><span class="st search">Searching</span></td><td><span class="st early">In Development</span></td><td class="date soon">Aug 14</td></tr>
       <tr><td class="name">SOLIDWORKS (SEO)</td><td><span class="st complete">Complete</span></td><td><span class="st search">Searching</span></td><td><span class="st complete">Complete</span></td><td class="date">Aug 21</td></tr>
       <tr><td class="name">Global Logistics Leader (ABM)</td><td><span class="st complete">Complete</span></td><td><span class="st search">Searching</span></td><td><span class="st complete">Complete</span></td><td class="date">Aug 21</td></tr>
@@ -182,6 +207,7 @@ footer{
       <tr><td class="name">Cision (Brand) — new</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">Akeneo (Brand Awareness) — refreshed</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
       <tr><td class="name">CareMetx (Creative) — refreshed</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
+      <tr><td class="name">Baker Hughes (ABM) — refreshed</td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td><span class="st complete">Complete</span></td><td class="date none">Live</td></tr>
     </table>
 
     <div class="legend">
@@ -198,5 +224,61 @@ footer{
   </footer>
 
 </div>
+<script>
+(function(){
+  var VOCAB={
+    1:['In Development','Written','Proofed','Complete'],           // copy
+    2:['Searching','In Design','Complete'],                         // images
+    3:['In Development','Developed','Proofed','Complete']           // dev
+  };
+  var CLS={'In Development':'early','Written':'written','Proofed':'proofed',
+           'Complete':'complete','Searching':'search','In Design':'mid','Developed':'mid'};
+  var editing=false;
+  var toggle=document.getElementById('edit-toggle');
+  var dl=document.getElementById('download-html');
+
+  toggle.addEventListener('click',function(){
+    editing=!editing;
+    document.body.classList.toggle('editing',editing);
+    toggle.classList.toggle('active',editing);
+    toggle.textContent=editing?'Done editing':'Edit mode';
+    document.querySelectorAll('td.date').forEach(function(td){
+      td.contentEditable=editing?'true':'false';
+    });
+  });
+
+  document.addEventListener('click',function(e){
+    if(!editing) return;
+    var pill=e.target.closest('.st');
+    if(!pill) return;
+    var td=pill.closest('td');
+    var tr=td.closest('tr');
+    if(!tr||tr.classList.contains('section-row')) return;
+    var idx=Array.prototype.indexOf.call(tr.children,td);
+    var vocab=VOCAB[idx];
+    if(!vocab) return;
+    var cur=pill.textContent.trim();
+    var next=vocab[(vocab.indexOf(cur)+1)%vocab.length];
+    pill.textContent=next;
+    pill.className='st '+(CLS[next]||'early');
+  });
+
+  dl.addEventListener('click',function(){
+    var wasEditing=editing;
+    if(wasEditing) toggle.click(); // exit edit mode so saved file opens clean
+    document.querySelectorAll('td.date').forEach(function(td){td.removeAttribute('contenteditable');});
+    // stamp the date
+    var f=document.querySelector('footer span:last-child');
+    if(f){var d=new Date();f.textContent='Updated '+d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});}
+    var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+    var blob=new Blob([html],{type:'text/html'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='index.html';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+  });
+})();
+</script>
 </body>
 </html>
