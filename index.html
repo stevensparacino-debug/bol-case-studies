@@ -38,9 +38,9 @@ h1{
 h1 .accent{color:var(--orange);}
 .sub{color:var(--muted);margin-top:12px;font-size:14px;max-width:720px;}
 .statbar{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
   background:var(--line);border:1px solid var(--line);
-  margin:40px 0 0;
+  margin:40px 0 48px;
 }
 .stat-hero{
   display:flex;align-items:center;gap:20px;
@@ -171,6 +171,10 @@ body.editing .edit-hint{display:block;}
 }
 @media(max-width:700px){.thad-done-grid{grid-template-columns:1fr 1fr;}}
 
+
+.stat.live-hero{background:rgba(123,237,248,0.08);}
+.stat.live-hero .n{color:var(--cyan);font-size:40px;}
+
 @media(max-width:900px){
   .wrap{padding:40px 20px 60px;}
   .statbar{grid-template-columns:repeat(2,1fr);}
@@ -216,17 +220,10 @@ body.editing .edit-hint{display:block;}
 
 
     <div class="statbar">
-    <div class="stat pri"><div class="n">9</div><div class="l">Live — missing work examples</div></div>
-    <div class="stat prod"><div class="n">1</div><div class="l">In production</div></div>
-    <div class="stat queue"><div class="n">10</div><div class="l">Planned</div></div>
-  </div>
-  <div class="stat-hero">
-    <div class="n">17</div>
-    <div>
-      <div class="l">Live &amp; completed with creative</div>
-      <div class="sub-l">Copy and dev are complete on the published page. For most, that includes work-example imagery — see note below.</div>
-      <div class="disclaimer"><b>Note:</b> Some pages in this count are marked complete without imagery by design, not because it's missing — GEO engagements (e.g. Bombora GEO, Forescout GEO) are written case studies only. All other pages in this count have work-example imagery live on the page.</div>
-    </div>
+    <div class="stat live-hero"><div class="n">26</div><div class="l">Live case studies</div></div>
+    <div class="stat img"><div class="n">17</div><div class="l">With images</div></div>
+    <div class="stat pri"><div class="n">9</div><div class="l">Still being worked on</div></div>
+    <div class="stat queue"><div class="n">5</div><div class="l">More underway — not live yet</div></div>
   </div>
 
   <section>
