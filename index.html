@@ -134,6 +134,42 @@ body.editing td.date{cursor:text;outline:1px dashed rgba(123,237,248,0.3);outlin
 body.editing .edit-hint{display:block;}
 @media print{.toolbar,.edit-hint{display:none!important;}}
 
+
+.thad-summary{
+  margin:14px 0 44px;padding:24px 26px;
+  background:var(--graphite);border:1px solid var(--orange);
+}
+.thad-summary .ts-eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--orange);margin-bottom:16px;
+}
+.thad-summary h3{
+  font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--white);margin:0 0 12px;
+  border-bottom:1px solid var(--line);padding-bottom:8px;
+}
+.thad-list{list-style:none;margin:0 0 24px;padding:0;}
+.thad-list li{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;gap:16px;
+}
+.thad-list li:last-child{border-bottom:none;}
+.thad-list .tl-name{font-weight:600;}
+.thad-list .tl-note{
+  font-size:12px;color:var(--muted);text-align:right;flex-shrink:0;
+}
+.thad-list .tl-note.flag{color:var(--orange);font-weight:600;}
+.thad-done-count{
+  display:flex;align-items:baseline;gap:12px;margin-bottom:14px;
+}
+.thad-done-count .n{font-size:32px;font-weight:800;color:var(--cyan);line-height:1;}
+.thad-done-count .l{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.thad-done-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:6px 20px;
+  font-size:13px;color:var(--white);
+}
+@media(max-width:700px){.thad-done-grid{grid-template-columns:1fr 1fr;}}
+
 @media(max-width:900px){
   .wrap{padding:40px 20px 60px;}
   .statbar{grid-template-columns:repeat(2,1fr);}
@@ -153,6 +189,30 @@ body.editing .edit-hint{display:block;}
   <div class="eyebrow">BOL agency — website case studies</div>
   <h1>Case study tracker: <span class="accent">status + expected completion</span></h1>
   <p class="sub">Status reflects the live site and the 26-BOL Case Studies board. All work completes in August — treated as a client project with added resources.</p>
+
+  <div class="thad-summary">
+    <div class="ts-eyebrow">Today's update — for Thad</div>
+    <h3>In progress right now</h3>
+    <ul class="thad-list">
+      <li><span class="tl-name">Bombora (GTM)</span><span class="tl-note flag">Waiting on client — meeting with Putney Monday</span></li>
+      <li><span class="tl-name">Sunrise (Brand Launch)</span><span class="tl-note flag">Waiting on client — meeting with Putney Monday</span></li>
+      <li><span class="tl-name">Donately (SEO &amp; Content)</span><span class="tl-note">Copy + images in progress · due Sep 18</span></li>
+      <li><span class="tl-name">AEM (Paid Media)</span><span class="tl-note">Copy + images in progress · due Sep 18</span></li>
+      <li><span class="tl-name">Worldly (GTM)</span><span class="tl-note">Copy + images in progress · due Sep 25</span></li>
+    </ul>
+    <h3>Fully done</h3>
+    <div class="thad-done-count"><div class="n">17</div><div class="l">Case studies live and complete</div></div>
+    <div class="thad-done-grid">
+      <div>LTN (ABM)</div><div>Cision</div><div>Akeneo</div>
+      <div>CareMetx</div><div>Baker Hughes</div><div>Blue Yonder</div>
+      <div>Honeywell Airports</div><div>Honeywell (ICP)</div><div>Blackburn</div>
+      <div>SOLIDWORKS (SEO)</div><div>Lytx</div><div>PayPal (Creative)</div>
+      <div>PayPal (Ticketing)</div><div>Ultimate ABM</div><div>Neustar</div>
+      <div>LTN (Web Dev)</div><div>LTN (Events)</div>
+    </div>
+  </div>
+
+
 
   <div class="statbar">
     <div class="stat pri"><div class="n">9</div><div class="l">Live — missing work examples</div></div>
